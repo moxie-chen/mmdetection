@@ -10,7 +10,7 @@ MMDetection provides hundreds of existing and existing detection models in [Mode
 
 By inference, we mean using trained models to detect objects on images. In MMDetection, a model is defined by a configuration file and existing model parameters are save in a checkpoint file.
 
-To start with, we recommend [Faster RCNN](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn) with this [configuration file](https://github.com/open-mmlab/mmdetection/blob/master/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py) and this [checkpoint file](http://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth). It is recommended to download the checkpoint file to `checkpoints` directory.
+To start with, we recommend [Faster RCNN](https://github.com/open-mmlab/mmdetection/tree/master/configs/faster_rcnn) with this [configuration file](https://github.com/open-mmlab/mmdetection/blob/master/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py) and this [checkpoint file](https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth). It is recommended to download the checkpoint file to `checkpoints` directory.
 
 ### High-level APIs for inference
 
@@ -174,7 +174,7 @@ Public datasets like [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/index.h
 It is recommended to download and extract the dataset somewhere outside the project directory and symlink the dataset root to `$MMDETECTION/data` as below.
 If your folder structure is different, you may need to change the corresponding paths in config files.
 
-```plain
+```text
 mmdetection
 ├── mmdet
 ├── tools
@@ -200,7 +200,7 @@ mmdetection
 
 Some models require additional [COCO-stuff](http://calvin.inf.ed.ac.uk/wp-content/uploads/data/cocostuffdataset/stuffthingmaps_trainval2017.zip) datasets, such as HTC, DetectoRS and SCNet, you can download and unzip then move to the coco folder. The directory should be like this.
 
-```plain
+```text
 mmdetection
 ├── data
 │   ├── coco
@@ -354,7 +354,24 @@ Assume that you have already downloaded the checkpoints to the directory `checkp
 
 ### Test without Ground Truth Annotations
 
-MMDetection supports to test models without ground-truth annotations using `CocoDataset`. If your dataset format is not in COCO format, please convert them to COCO format. For example, if your dataset format is VOC, you can directly convert it to COCO format by the [script in tools.](https://github.com/open-mmlab/mmdetection/tree/master/tools/dataset_converters/pascal_voc.py)
+MMDetection supports to test models without ground-truth annotations using `CocoDataset`. If your dataset format is not in COCO format, please convert them to COCO format. For example, if your dataset format is VOC, you can directly convert it to COCO format by the [script in tools.](https://github.com/open-mmlab/mmdetection/tree/master/tools/dataset_converters/pascal_voc.py) If your dataset format is Cityscapes, you can directly convert it to COCO format by the [script in tools.](https://github.com/open-mmlab/mmdetection/tree/master/tools/dataset_converters/cityscapes.py) The rest of the formats can be converted using [this script](https://github.com/open-mmlab/mmdetection/tree/master/tools/dataset_converters/images2coco.py).
+
+```shel
+python tools/dataset_converters/images2coco.py \
+    ${IMG_PATH} \
+    ${CLASSES} \
+    ${OUT} \
+    [--exclude-extensions]
+```
+
+arguments：
+
+- `IMG_PATH`: The root path of images.
+- `CLASSES`: The text file with a list of categories.
+- `OUT`: The output annotation json file name. The save dir is in the same directory as `IMG_PATH`.
+- `exclude-extensions`: The suffix of images to be excluded, such as 'png' and 'bmp'.
+
+After the conversion is complete, you can use the following command to test
 
 ```shell
 # single-gpu testing

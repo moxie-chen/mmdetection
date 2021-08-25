@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import itertools
 import logging
 import os.path as osp
@@ -45,7 +46,10 @@ class CocoDataset(CustomDataset):
         """
 
         self.coco = COCO(ann_file)
+        # The order of returned `cat_ids` will not
+        # change with the order of the CLASSES
         self.cat_ids = self.coco.get_cat_ids(cat_names=self.CLASSES)
+
         self.cat2label = {cat_id: i for i, cat_id in enumerate(self.cat_ids)}
         self.img_ids = self.coco.get_img_ids()
         data_infos = []
